@@ -55,7 +55,23 @@ log "wrote $CLIENT_SECRET_PATH"
 # urlencode @ -> %40 to match auth/credential_store.py:_get_credential_path
 SAFE_EMAIL="${POSTI_GMAIL_USER_EMAIL//@/%40}"
 USER_CREDS_PATH="$CREDS_DIR/${SAFE_EMAIL}.json"
-SCOPES_JSON='["https://www.googleapis.com/auth/gmail.modify","https://www.googleapis.com/auth/gmail.labels","https://www.googleapis.com/auth/gmail.readonly","https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/userinfo.email","openid"]'
+# Scopes MUST match what the refresh token was actually issued for; declaring
+# scopes the token lacks causes workspace-mcp to invalidate the credentials.
+# Posti's refresh token currently has: gmail.compose + gmail.readonly. Override
+# via POSTI_GMAIL_SCOPES (space-separated) once the token is reissued with a
+# fuller scope set.
+DEFAULT_SCOPES='["https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/gmail.readonly"]'
+if [ -n "${POSTI_GMAIL_SCOPES:-}" ]; then
+    SCOPES_JSON='['
+    first=1
+    for s in $POSTI_GMAIL_SCOPES; do
+        if [ "$first" = "1" ]; then first=0; else SCOPES_JSON="${SCOPES_JSON},"; fi
+        SCOPES_JSON="${SCOPES_JSON}\"${s}\""
+    done
+    SCOPES_JSON="${SCOPES_JSON}]"
+else
+    SCOPES_JSON="$DEFAULT_SCOPES"
+fi
 
 cat > "$USER_CREDS_PATH" <<JSON
 {
