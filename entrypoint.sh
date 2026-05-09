@@ -53,7 +53,9 @@ log "wrote $CLIENT_SECRET_PATH"
 
 # 2. Saved credentials JSON for the user (single-user mode picks this up)
 # urlencode @ -> %40 to match auth/credential_store.py:_get_credential_path
-SAFE_EMAIL="${POSTI_GMAIL_USER_EMAIL//@/%40}"
+# DO NOT URL-encode @ — taylorwilsdon/google_workspace_mcp uses
+# urllib.parse.quote(email, safe="@._-") which keeps @ literal.
+SAFE_EMAIL="${POSTI_GMAIL_USER_EMAIL}"
 USER_CREDS_PATH="$CREDS_DIR/${SAFE_EMAIL}.json"
 # Scopes MUST match what the refresh token was actually issued for; declaring
 # scopes the token lacks causes workspace-mcp to invalidate the credentials.
