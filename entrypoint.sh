@@ -57,10 +57,11 @@ SAFE_EMAIL="${POSTI_GMAIL_USER_EMAIL//@/%40}"
 USER_CREDS_PATH="$CREDS_DIR/${SAFE_EMAIL}.json"
 # Scopes MUST match what the refresh token was actually issued for; declaring
 # scopes the token lacks causes workspace-mcp to invalidate the credentials.
-# Posti's refresh token currently has: gmail.compose + gmail.readonly. Override
-# via POSTI_GMAIL_SCOPES (space-separated) once the token is reissued with a
-# fuller scope set.
-DEFAULT_SCOPES='["https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/gmail.readonly"]'
+# As of 2026-05-09 the Posti refresh token is reissued with the full Workspace
+# scope set (BASE_SCOPES + GMAIL_SCOPES from taylorwilsdon/google_workspace_mcp
+# auth/scopes.py). Override via POSTI_GMAIL_SCOPES (space-separated) only if
+# you intentionally want a narrower file-declared set.
+DEFAULT_SCOPES='["openid","https://www.googleapis.com/auth/userinfo.email","https://www.googleapis.com/auth/userinfo.profile","https://www.googleapis.com/auth/gmail.readonly","https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/gmail.modify","https://www.googleapis.com/auth/gmail.labels","https://www.googleapis.com/auth/gmail.send","https://www.googleapis.com/auth/gmail.settings.basic"]'
 if [ -n "${POSTI_GMAIL_SCOPES:-}" ]; then
     SCOPES_JSON='['
     first=1
