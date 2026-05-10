@@ -10,9 +10,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # uv for dependency mgmt
 RUN pip install --no-cache-dir uv
 
-# Pin upstream taylorwilsdon/google_workspace_mcp to current main HEAD
-# (commit pinned at deploy time; fall back to main on rebuild)
-ARG UPSTREAM_REF=main
+# Pin upstream taylorwilsdon/google_workspace_mcp to a specific release tag
+# so rebuilds are reproducible. Override at build time with --build-arg UPSTREAM_REF=vX.Y.Z.
+ARG UPSTREAM_REF=v1.20.4
 RUN git clone --depth 1 --branch ${UPSTREAM_REF} \
     https://github.com/taylorwilsdon/google_workspace_mcp.git /app/upstream
 

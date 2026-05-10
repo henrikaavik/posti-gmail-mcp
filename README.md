@@ -44,3 +44,11 @@ curl -fsSN -X POST http://localhost:8000/mcp \
   -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 ```
+
+## Upstream version
+
+The Dockerfile pins `taylorwilsdon/google_workspace_mcp` to a release tag via the `UPSTREAM_REF` build arg. To bump, change the default in the Dockerfile or build with `--build-arg UPSTREAM_REF=vX.Y.Z`.
+
+## CHANGELOG
+
+- 2026-05-10: pin upstream `taylorwilsdon/google_workspace_mcp` to `v1.20.4` (was `main`); rebuilds are now reproducible.
